@@ -1,4 +1,4 @@
-package fr.flaforge.photographart.infrastructure.repository
+package fr.flaforge.photographart.infrastructure.write.repository
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -10,5 +10,6 @@ class ArtEntity(
         @Id @GeneratedValue var id: Long? = null,
         @Column(nullable = false) val art: String,
         @Column(nullable = false) val title: String,
-        @Column val description: String
+        @Column val description: String,
+        @Column val category: String
 )

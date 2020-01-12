@@ -1,25 +1,25 @@
-package fr.flaforge.photographart.infrastructure.web
+package fr.flaforge.photographart.infrastructure.write.web
 
 import fr.flaforge.photographart.domain.command.AddArtCommand
 import fr.flaforge.photographart.domain.model.Art
 import fr.flaforge.photographart.domain.model.Catalog
-import fr.flaforge.photographart.infrastructure.repository.ArtRepository
-import fr.flaforge.photographart.infrastructure.web.dto.ArtDto
+import fr.flaforge.photographart.infrastructure.write.dto.ArtDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import java.security.PrivateKey
 import javax.validation.ValidationException
 import kotlin.NoSuchElementException
 
 @Controller
-@RequestMapping("arts")
-class PhotographartController(
+@RequestMapping(value = ["arts"],
+        method = [RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT])
+class WriteArtController(
         private val catalog: Catalog,
-        private val commandHandler: ArtCommandHandler,
-        private val repository: ArtRepository
+        private val commandHandler: ArtCommandHandler
 ) {
+
+    // Transaction, async etc
 
     @PostMapping
     fun addArt(@RequestBody artDto: ArtDto): ResponseEntity<Long> {
@@ -37,14 +37,6 @@ class PhotographartController(
     }
 
     // update, remove etc
-
-    @GetMapping("/{id}")
-    fun getArt(@PathVariable id: String): ResponseEntity<ArtDto> {
-        return ResponseEntity.ok(repository.findById(id.toLong()).get()
-                .let { a -> ArtDto(a.art, a.title, a.description) })
-    }
-
-    // getAll, getByxx etc
 
     @ExceptionHandler(NoSuchElementException::class)
     fun noSuchArt(ex: NoSuchElementException): ResponseEntity<String> {
